@@ -1,0 +1,29 @@
+{
+    "name": "kipchak/middleware-error",
+    "type": "middleware",
+    "description": "An Error Handling Middleware for the Kipchak API Development Kit (ADK)",
+    "keywords": [
+        "APIs",
+        "HTTP",
+        "Microservices",
+        "Mamluk"
+    ],
+    "homepage": "https://mamluk.net",
+    "license": "MIT",
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Kipchak\\Middleware\\Error\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "guzzlehttp/guzzle": "^7.10",
+        "illuminate/http": "^12.40",
+        "kipchak/core": "2.x-dev",
+        "kipchak/driver-config": "dev-master"
+    }
+}
