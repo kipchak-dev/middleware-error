@@ -14,7 +14,6 @@ class Middleware implements Interfaces\Middleware
 
     public static function initialise(App $app): void
     {
-        $container = $app->getContainer();
         $api = Config::get('kipchak.api');
         $logExceptions = isset($api['logExceptions']) && (bool) $api['logExceptions'];
         $logExceptionDetails = isset($api['logExceptionDetails']) && (bool) $api['logExceptionDetails'];
