@@ -3,9 +3,8 @@
 namespace Kipchak\Middleware\Error;
 
 use Kipchak\Core\Interfaces;
-use Psr\Container\ContainerInterface;
 use Kipchak\Driver\Config\Driver as Config;
-use Kipchak\Core\Components\Exceptions\Handlers\DefaultHandler;
+use Kipchak\Middleware\Error\Exceptions\Handlers\DefaultHandler;
 use Slim\App;
 
 class Middleware implements Interfaces\Middleware
