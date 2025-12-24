@@ -10,8 +10,6 @@ use Slim\App;
 
 class Middleware implements Interfaces\Middleware
 {
-    protected static ContainerInterface $container;
-
     public static function initialise(App $app): void
     {
         $api = Config::get('kipchak.api');
