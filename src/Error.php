@@ -3,7 +3,7 @@
 namespace Kipchak\Middleware\Error;
 
 use Kipchak\Core\Interfaces;
-use Kipchak\Driver\Config\Driver as Config;
+use Kipchak\Driver\Config\Config;
 use Kipchak\Middleware\Error\Exceptions\Handlers\DefaultHandler;
 use Slim\App;
 
