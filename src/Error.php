@@ -7,7 +7,7 @@ use Kipchak\Driver\Config\Driver as Config;
 use Kipchak\Middleware\Error\Exceptions\Handlers\DefaultHandler;
 use Slim\App;
 
-class Middleware implements Interfaces\Middleware
+class Error implements Interfaces\Middleware
 {
     public static function initialise(App $app): void
     {
