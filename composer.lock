@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4fb1150b06c0798921cd6852403ab4a",
+    "content-hash": "6f9c9c192c3f39e35bddda1f0cea4fc5",
     "packages": [
         {
             "name": "cuyz/valinor",
@@ -142,11 +142,11 @@
         },
         {
             "name": "kipchak/core",
-            "version": "2.x-dev",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://1x.ax/mamluk/kipchak/core",
-                "reference": "f89b0ac7143bd09cfcc1ec1f57b9b2c8d77f5e21"
+                "reference": "8ea34fa8ce593f705a63faca4fd5eee82259198d"
             },
             "require": {
                 "cuyz/valinor": "^1.17",
@@ -175,20 +175,19 @@
                 "apis",
                 "microservices"
             ],
-            "time": "2025-12-25T09:09:00+00:00"
+            "time": "2025-12-25T10:26:38+00:00"
         },
         {
             "name": "kipchak/driver-config",
-            "version": "dev-master",
+            "version": "1.0",
             "source": {
                 "type": "git",
                 "url": "https://1x.ax/mamluk/kipchak/drivers/config",
-                "reference": "20867eb0bdf56da07e60de8e52372a91f883c7f7"
+                "reference": "2b6ca0d5edf001c7e4836b0e4a1c170c28e7ccd9"
             },
             "require": {
-                "kipchak/core": "2.x-dev"
+                "kipchak/core": "^2"
             },
-            "default-branch": true,
             "type": "middleware",
             "autoload": {
                 "psr-4": {
@@ -208,7 +207,7 @@
                 "http",
                 "microservices"
             ],
-            "time": "2025-12-25T09:56:25+00:00"
+            "time": "2025-12-27T03:47:52+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -1553,10 +1552,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "kipchak/core": 20,
-        "kipchak/driver-config": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {},
