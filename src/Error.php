@@ -5,7 +5,7 @@ namespace Kipchak\Middleware\Error;
 use Kipchak\Core\Interfaces;
 use Kipchak\Driver\Config\Config;
 use Kipchak\Middleware\Error\Exceptions\Handlers\DefaultHandler;
-use Slim\App;
+use Kipchak\Core\Components\App;
 
 class Error implements Interfaces\Middleware
 {
