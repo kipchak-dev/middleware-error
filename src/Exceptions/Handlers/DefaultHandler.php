@@ -27,9 +27,17 @@ class DefaultHandler extends ErrorHandler
         $exception = $this->exception;
         $statusCode = 500;
         $type = self::SERVER_ERROR;
+        // Default to a generic description. Only Slim HttpException subclasses
+        // — which carry intentional, user-facing error text (e.g. "Resource not
+        // found", route validation messages) — get their message passed through.
+        // Anything else (RuntimeException, DBAL/Stripe/Brevo SDK errors, etc.)
+        // can leak credentials or internal detail via getMessage(), so we mask.
+        $description = 'An unexpected error occurred.';
 
         if ($exception instanceof HttpException) {
-            if ($statusCode >= 400) {
+            // Slim HttpExceptions set their code to the HTTP status code
+            // (404, 403, 400, ...). Only trust it if it looks sane.
+            if ($exception->getCode() >= 400) {
                 $statusCode = $exception->getCode();
             }
             if ($exception instanceof HttpNotFoundException) {
@@ -45,9 +53,9 @@ class DefaultHandler extends ErrorHandler
             } elseif ($exception instanceof HttpNotImplementedException) {
                 $type = self::NOT_IMPLEMENTED;
             }
-        }
 
-        $description = $exception->getMessage();
+            $description = $exception->getMessage();
+        }
 
         $errorDisplay = [
             'code' => $statusCode,
