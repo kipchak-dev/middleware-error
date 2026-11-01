@@ -14,6 +14,16 @@ Then just ensure you have appropriate settings configured in `kipchak.api.php` c
 
 For a sample, please see: https://1x.ax/mamluk/kipchak/starter/~files/master/config/kipchak.api.php.
 
+The settings it reads from `kipchak.api.php`:
+
+* `logExceptions`: log exceptions.
+* `logExceptionDetails`: include the details and stack trace in the log entry.
+* `logExceptionsTo` (optional): `'error_log'` (the default) has Slim write exceptions with PHP's `error_log()`, as in
+  earlier versions; `'logger'` sends them through the Logger driver at error level instead, so they share the API's
+  log format and processors (PII Redaction's, for one). Without the Logger driver, `error_log()` is used.
+
+Full documentation: <https://kipchak.dev/docs/mw-error>.
+
 ## What is a Kipchak Middleware?
 
 Kipchak Middleware is a standard PHP PSR-15 middleware.
