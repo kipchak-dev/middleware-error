@@ -145,11 +145,11 @@
         },
         {
             "name": "kipchak/core",
-            "version": "3.12",
+            "version": "3.13",
             "source": {
                 "type": "git",
                 "url": "https://1x.ax/mamluk/kipchak/core",
-                "reference": "91c01cac03b4483d08d8888046a4fba0ca7ca288"
+                "reference": "0c4cb01c5697de81d8613acefc3bd760701e17c9"
             },
             "require": {
                 "cuyz/valinor": "^2",
@@ -178,15 +178,15 @@
                 "apis",
                 "microservices"
             ],
-            "time": "2026-10-28T04:55:31+00:00"
+            "time": "2026-11-01T05:25:39+00:00"
         },
         {
             "name": "kipchak/driver-config",
-            "version": "1.30",
+            "version": "1.31",
             "source": {
                 "type": "git",
                 "url": "https://1x.ax/mamluk/kipchak/drivers/config",
-                "reference": "86d0205180cc47811e9559de65cc56d91162185d"
+                "reference": "147e0622e03a199d65e410f1834a8b40baec5e63"
             },
             "require": {
                 "kipchak/core": "^2 || ^3"
@@ -210,7 +210,7 @@
                 "http",
                 "microservices"
             ],
-            "time": "2026-10-28T04:55:53+00:00"
+            "time": "2026-11-01T05:25:57+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -2266,11 +2266,11 @@
     "packages-dev": [
         {
             "name": "kipchak/driver-logger",
-            "version": "1.35",
+            "version": "1.36",
             "source": {
                 "type": "git",
                 "url": "https://1x.ax/mamluk/kipchak/drivers/logger",
-                "reference": "791eb98b67ba6453734d3dc27d6434078790884e"
+                "reference": "032af3abc18ba3707d543b0c8eafcdd104c6c8b8"
             },
             "require": {
                 "kipchak/core": "^2 || ^3",
@@ -2296,7 +2296,7 @@
                 "http",
                 "microservices"
             ],
-            "time": "2026-10-28T04:56:17+00:00"
+            "time": "2026-11-01T05:26:20+00:00"
         },
         {
             "name": "monolog/monolog",
