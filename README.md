@@ -10,7 +10,21 @@ This  Middleware package provides a standardized way to handle and log errors an
 
 Install it via composer: `composer require kipchak/middleware-error`.
 
-Then just ensure you have appropriate settings configured in `kipchak.api.php` config file in the root of your project.
+Initialise it twice in `middlewares/middlewares.php`, as the first and the last line, with every other global
+middleware between the two:
+
+```php
+use Kipchak\Middleware\Error\Error;
+
+Error::initialise($app);   // innermost: turns route exceptions into JSON responses
+// ... every other global middleware
+Error::initialise($app);   // outermost: does the same for exceptions from the middleware above
+```
+
+Slim runs the middleware added last first, so the first is the innermost middleware and the last the outermost.
+Without the last, an exception thrown by another middleware reaches the client as a plain-text 500.
+
+Then ensure you have appropriate settings configured in the `kipchak.api.php` config file in the root of your project.
 
 For a sample, please see: https://1x.ax/mamluk/kipchak/starter/~files/master/config/kipchak.api.php.
 
