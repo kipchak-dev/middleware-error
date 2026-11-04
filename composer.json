@@ -33,5 +33,17 @@
         "psr-4": {
             "Kipchak\\Middleware\\Error\\Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "kipchak": {
+            "type": "middleware",
+            "config": null,
+            "configName": null,
+            "initialise": "\\Kipchak\\Middleware\\Error\\Error::initialise($app);",
+            "after": [],
+            "before": [],
+            "docs": "https://kipchak.dev/docs/mw-error",
+            "note": "Initialised first and last in middlewares/middlewares.php; every project created from the starter has it."
+        }
     }
 }
