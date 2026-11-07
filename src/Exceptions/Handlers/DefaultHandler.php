@@ -9,6 +9,7 @@ use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Exception\HttpNotImplementedException;
+use Slim\Exception\HttpTooManyRequestsException;
 use Slim\Exception\HttpUnauthorizedException;
 use Slim\Handlers\ErrorHandler;
 
@@ -20,6 +21,7 @@ class DefaultHandler extends ErrorHandler
     public const NOT_IMPLEMENTED = 'NOT_IMPLEMENTED';
     public const RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
     public const SERVER_ERROR = 'SERVER_ERROR';
+    public const TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS';
     public const UNAUTHENTICATED = 'UNAUTHENTICATED';
 
     protected function respond(): ResponseInterface
@@ -52,6 +54,9 @@ class DefaultHandler extends ErrorHandler
                 $type = self::BAD_REQUEST;
             } elseif ($exception instanceof HttpNotImplementedException) {
                 $type = self::NOT_IMPLEMENTED;
+            } elseif ($exception instanceof HttpTooManyRequestsException || $statusCode === 429) {
+                // Also a plain HttpException thrown with 429, as rate-limiting and quota code often does.
+                $type = self::TOO_MANY_REQUESTS;
             }
 
             $description = $exception->getMessage();
