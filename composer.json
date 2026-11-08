@@ -21,7 +21,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "kipchak/core": "^2 || ^3",
+        "kipchak/core": "^3.18",
         "kipchak/driver-config": "^1",
         "psr/log": "^1 || ^2 || ^3"
     },

@@ -64,6 +64,46 @@ final class StatusTypeTest extends TestCase
         $this->assertSame('Quota exceeded.', $body['data']);
     }
 
+    /**
+     * @return array<string, array{0: callable, 1: int, 2: string}>
+     */
+    public static function namedExceptions(): array
+    {
+        return [
+            'bad request' => [fn ($r) => new \Slim\Exception\HttpBadRequestException($r), 400, 'BAD_REQUEST'],
+            'unauthorised' => [fn ($r) => new \Slim\Exception\HttpUnauthorizedException($r), 401, 'UNAUTHENTICATED'],
+            'forbidden' => [fn ($r) => new \Slim\Exception\HttpForbiddenException($r), 403, 'INSUFFICIENT_PRIVILEGES'],
+            'not found' => [fn ($r) => new HttpNotFoundException($r), 404, 'RESOURCE_NOT_FOUND'],
+            'method not allowed' => [fn ($r) => new \Slim\Exception\HttpMethodNotAllowedException($r), 405, 'NOT_ALLOWED'],
+            'not implemented' => [fn ($r) => new \Slim\Exception\HttpNotImplementedException($r), 501, 'NOT_IMPLEMENTED'],
+        ];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('namedExceptions')]
+    public function testEachSlimExceptionKeepsItsName(callable $exception, int $code, string $status): void
+    {
+        [$actualCode, $body] = $this->respond(fn ($request) => throw $exception($request));
+
+        $this->assertSame([$code, $status], [$actualCode, $body['status']]);
+    }
+
+    public function testAnotherClientErrorKeepsItsHttpName(): void
+    {
+        // Until 1.35 every 4xx without a Kipchak name was called SERVER_ERROR, as if the server had failed.
+        [$status, $body] = $this->respond(fn ($request) => throw new HttpException($request, 'Already taken.', 409));
+        $this->assertSame([409, 'CONFLICT'], [$status, $body['status']]);
+
+        [$status, $body] = $this->respond(fn ($request) => throw new HttpException($request, 'Not valid.', 422));
+        $this->assertSame([422, 'UNPROCESSABLE ENTITY'], [$status, $body['status']]);
+    }
+
+    public function testControlAnUnexpectedExceptionIsStillAServerError(): void
+    {
+        [$status, $body] = $this->respond(fn ($request) => throw new \RuntimeException('database password in here'));
+
+        $this->assertSame([500, 'SERVER_ERROR', 'An unexpected error occurred.'], [$status, $body['status'], $body['data']]);
+    }
+
     public function testOtherStatusesKeepTheirNames(): void
     {
         [$status, $body] = $this->respond(fn ($request) => throw new HttpNotFoundException($request, 'No such thing.'));

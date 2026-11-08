@@ -2,27 +2,25 @@
 
 namespace Kipchak\Middleware\Error\Exceptions\Handlers;
 
+use Kipchak\Core\Components\Http\ErrorStatus;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
-use Slim\Exception\HttpForbiddenException;
-use Slim\Exception\HttpMethodNotAllowedException;
-use Slim\Exception\HttpNotFoundException;
-use Slim\Exception\HttpNotImplementedException;
-use Slim\Exception\HttpTooManyRequestsException;
-use Slim\Exception\HttpUnauthorizedException;
 use Slim\Handlers\ErrorHandler;
 
+/**
+ * Writes every error as {"code", "status", "data"}, with the status from core's ErrorStatus: the same names every
+ * Kipchak middleware uses when it refuses a request itself. The constants are kept for code that refers to them.
+ */
 class DefaultHandler extends ErrorHandler
 {
-    public const BAD_REQUEST = 'BAD_REQUEST';
-    public const INSUFFICIENT_PRIVILEGES = 'INSUFFICIENT_PRIVILEGES';
-    public const NOT_ALLOWED = 'NOT_ALLOWED';
-    public const NOT_IMPLEMENTED = 'NOT_IMPLEMENTED';
-    public const RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
-    public const SERVER_ERROR = 'SERVER_ERROR';
-    public const TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS';
-    public const UNAUTHENTICATED = 'UNAUTHENTICATED';
+    public const BAD_REQUEST = ErrorStatus::BAD_REQUEST;
+    public const INSUFFICIENT_PRIVILEGES = ErrorStatus::INSUFFICIENT_PRIVILEGES;
+    public const NOT_ALLOWED = ErrorStatus::NOT_ALLOWED;
+    public const NOT_IMPLEMENTED = ErrorStatus::NOT_IMPLEMENTED;
+    public const RESOURCE_NOT_FOUND = ErrorStatus::RESOURCE_NOT_FOUND;
+    public const SERVER_ERROR = ErrorStatus::SERVER_ERROR;
+    public const TOO_MANY_REQUESTS = ErrorStatus::TOO_MANY_REQUESTS;
+    public const UNAUTHENTICATED = ErrorStatus::UNAUTHENTICATED;
 
     protected function respond(): ResponseInterface
     {
@@ -42,22 +40,10 @@ class DefaultHandler extends ErrorHandler
             if ($exception->getCode() >= 400) {
                 $statusCode = $exception->getCode();
             }
-            if ($exception instanceof HttpNotFoundException) {
-                $type = self::RESOURCE_NOT_FOUND;
-            } elseif ($exception instanceof HttpMethodNotAllowedException) {
-                $type = self::NOT_ALLOWED;
-            } elseif ($exception instanceof HttpUnauthorizedException) {
-                $type = self::UNAUTHENTICATED;
-            } elseif ($exception instanceof HttpForbiddenException) {
-                $type = self::INSUFFICIENT_PRIVILEGES;
-            } elseif ($exception instanceof HttpBadRequestException) {
-                $type = self::BAD_REQUEST;
-            } elseif ($exception instanceof HttpNotImplementedException) {
-                $type = self::NOT_IMPLEMENTED;
-            } elseif ($exception instanceof HttpTooManyRequestsException || $statusCode === 429) {
-                // Also a plain HttpException thrown with 429, as rate-limiting and quota code often does.
-                $type = self::TOO_MANY_REQUESTS;
-            }
+            // Each Slim HTTP exception carries its status as its code (HttpUnauthorizedException 401, a plain
+            // HttpException thrown with 429 by rate-limiting code, ...). A 4xx without a Kipchak name keeps its
+            // HTTP name, so a 409 is CONFLICT rather than SERVER_ERROR.
+            $type = ErrorStatus::for($statusCode);
 
             $description = $exception->getMessage();
         }
