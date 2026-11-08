@@ -2,6 +2,7 @@
 
 namespace Kipchak\Middleware\Error\Exceptions\Handlers;
 
+use Kipchak\Core\Components\Dto\InvalidInput;
 use Kipchak\Core\Components\Http\ErrorStatus;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Exception\HttpException;
@@ -10,6 +11,7 @@ use Slim\Handlers\ErrorHandler;
 /**
  * Writes every error as {"code", "status", "data"}, with the status from core's ErrorStatus: the same names every
  * Kipchak middleware uses when it refuses a request itself. The constants are kept for code that refers to them.
+ * A request body that is not valid (core's InvalidInput) also carries meta.errors, by field, beside the same data.
  */
 class DefaultHandler extends ErrorHandler
 {
@@ -51,8 +53,11 @@ class DefaultHandler extends ErrorHandler
         $errorDisplay = [
             'code' => $statusCode,
             'status' => $type,
-            'data' => $description,
         ];
+        if ($exception instanceof InvalidInput && $exception->errors !== []) {
+            $errorDisplay['meta'] = ['errors' => $exception->errors];
+        }
+        $errorDisplay['data'] = $description;
 
         $payloadDisplay = json_encode($errorDisplay, JSON_PRETTY_PRINT);
         $response = $this->responseFactory->createResponse($statusCode);

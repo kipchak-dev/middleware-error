@@ -6,6 +6,7 @@ namespace Kipchak\Middleware\Error\Tests;
 
 use DI\Container;
 use Kipchak\Core\Components\App;
+use Kipchak\Core\Components\Dto\InvalidInput;
 use Kipchak\Driver\Config\Config;
 use Kipchak\Driver\Logger\Logger;
 use Kipchak\Middleware\Error\Error;
@@ -45,6 +46,37 @@ final class StatusTypeTest extends TestCase
         $response = $app->handle((new ServerRequestFactory())->createServerRequest('GET', 'https://api.example.com/thing'));
 
         return [$response->getStatusCode(), json_decode((string) $response->getBody(), true)];
+    }
+
+    public function testAnInvalidBodyCarriesItsErrorsByFieldBesideTheUnchangedData(): void
+    {
+        $errors = ['title' => ['Must be at least 1 character.'], 'notes.1.text' => ['This field is required.']];
+        $message = 'The book is not valid: title: Must be at least 1 character. notes.1.text: This field is required.';
+
+        [$status, $body] = $this->respond(static function (ServerRequestInterface $request) use ($message, $errors): never {
+            throw new InvalidInput($request, $message, $errors);
+        });
+
+        self::assertSame(400, $status);
+        self::assertSame(['code' => 400, 'status' => 'BAD_REQUEST', 'meta' => ['errors' => $errors], 'data' => $message], $body);
+    }
+
+    public function testControlInvalidInputWithNoFieldErrorsHasNoMeta(): void
+    {
+        [, $body] = $this->respond(static function (ServerRequestInterface $request): never {
+            throw new InvalidInput($request, 'The body is not valid JSON.');
+        });
+
+        self::assertSame(['code' => 400, 'status' => 'BAD_REQUEST', 'data' => 'The body is not valid JSON.'], $body);
+    }
+
+    public function testControlAnotherErrorHasNoMeta(): void
+    {
+        [, $body] = $this->respond(static function (ServerRequestInterface $request): never {
+            throw new HttpNotFoundException($request, 'No book has the ID 9.');
+        });
+
+        self::assertSame(['code' => 404, 'status' => 'RESOURCE_NOT_FOUND', 'data' => 'No book has the ID 9.'], $body);
     }
 
     public function testTooManyRequestsHasItsOwnStatus(): void
