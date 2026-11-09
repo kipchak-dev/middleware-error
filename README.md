@@ -26,7 +26,7 @@ Without the last, an exception thrown by another middleware reaches the client a
 
 Then ensure you have appropriate settings configured in the `kipchak.api.php` config file in the root of your project.
 
-For a sample, please see: https://1x.ax/mamluk/kipchak/starter/~files/master/config/kipchak.api.php.
+For a sample, please see: https://github.com/kipchak-dev/starter/blob/master/config/kipchak.api.php.
 
 The settings it reads from `kipchak.api.php`:
 
